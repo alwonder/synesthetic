@@ -18,6 +18,11 @@ export const AudioPlayer = ({ audio }: Props) => {
   const onPlaying = useCallback(() => setIsPlaying(true), []);
   const onPause = useCallback(() => setIsPlaying(false), []);
   const onEnded = useCallback(() => setCurrentTime(0), []);
+  const onEmptied = useCallback(() => {
+    setIsDisabled(true);
+    setIsPlaying(false);
+    setCurrentTime(0);
+  }, []);
 
   useEffect(() => {
     const listeners: Record<string, () => void> = {
@@ -26,6 +31,7 @@ export const AudioPlayer = ({ audio }: Props) => {
       playing: onPlaying,
       pause: onPause,
       ended: onEnded,
+      emptied: onEmptied,
     };
     Object.keys(listeners).forEach((event) => audio.addEventListener(event, listeners[event]));
 

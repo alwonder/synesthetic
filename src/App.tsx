@@ -1,14 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 import { AudioPlayer } from './audioPlayer/AudioPlayer';
+import { AudioSelect } from './audioSelect/AudioSelect';
+import { audioSources } from './export/audioSources';
 import sample1 from './samples/sample1.ogg';
 import { AudioAnalyserFactory } from './utils/AudioContext';
 import { BasicVisualizer } from './visualizers/BasicVisualizer';
 
-const someAudio = new Audio(
-  'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3',
-  // sample1,
-);
+const someAudio = new Audio();
 someAudio.crossOrigin = 'anonymous';
 const WIDTH = 512;
 const HEIGHT = 500;
@@ -20,6 +19,16 @@ function App() {
   const analyserRef = useRef<AnalyserNode>();
   const dataArrayRef = useRef<Uint8Array>();
   const visualizerRef = useRef<BasicVisualizer | null>(null);
+  const [audioSrc, setAudioSrc] = useState(audioSources[0].src);
+
+  useEffect(() => {
+    someAudio.pause();
+    someAudio.src = audioSrc;
+
+    return () => {
+      someAudio.src = '';
+    };
+  }, [audioSrc]);
 
   useEffect(() => {
     const { audioContext, audioAnalyser } = AudioAnalyserFactory.create();
@@ -49,10 +58,15 @@ function App() {
     };
   }, []);
 
+  const onSrcSelect = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
+    setAudioSrc(event.target.value);
+  }, []);
+
   return (
     <div className="App">
       <canvas ref={canvasRef} width={WIDTH} height={HEIGHT} />
       <AudioPlayer audio={someAudio} />
+      <AudioSelect selectedSrc={audioSrc} onSrcSelect={onSrcSelect} />
     </div>
   );
 }
