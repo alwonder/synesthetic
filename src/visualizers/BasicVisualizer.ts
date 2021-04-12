@@ -37,11 +37,19 @@ export class BasicVisualizer {
 
     this.analyser.getByteTimeDomainData(this.dataArray);
 
-    this.canvasContext.fillStyle = 'rgb(200, 200, 200)';
+    this.canvasContext.fillStyle = 'rgb(0, 0, 0)';
     this.canvasContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-    this.canvasContext.lineWidth = 2;
-    this.canvasContext.strokeStyle = 'rgb(0, 0, 0)';
+    this.drawWave(3, 'rgb(0, 255, 0)');
+    this.drawWave(2, 'rgb(255, 255, 255)');
+    this.canvasContext.filter = 'blur(2px)';
+  }
+
+  private drawWave(lineWidth: number, strokeStyle: string): void {
+    if (!this.canvasContext) return;
+
+    this.canvasContext.lineWidth = lineWidth;
+    this.canvasContext.strokeStyle = strokeStyle;
     this.canvasContext.beginPath();
 
     const sliceWidth = this.canvasWidth / this.bufferSize;

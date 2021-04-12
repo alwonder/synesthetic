@@ -3,7 +3,6 @@ import './App.css';
 import { AudioPlayer } from './audioPlayer/AudioPlayer';
 import { AudioSelect } from './audioSelect/AudioSelect';
 import { audioSources } from './export/audioSources';
-import sample1 from './samples/sample1.ogg';
 import { AudioAnalyserFactory } from './utils/AudioContext';
 import { BasicVisualizer } from './visualizers/BasicVisualizer';
 
