@@ -3,6 +3,7 @@ import './App.css';
 // @ts-ignore
 import abc from './samples/sample1.ogg';
 import { AudioAnalyserFactory } from './utils/AudioContext';
+import { BasicVisualizer } from './visualizers/BasicVisualizer';
 
 const someAudio = new Audio(
   // 'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3',
@@ -10,7 +11,7 @@ const someAudio = new Audio(
 );
 
 const WIDTH = 512;
-const HEIGHT = 512;
+const HEIGHT = 500;
 const BUFFER_LENGTH = 1024;
 
 function App() {
@@ -20,64 +21,17 @@ function App() {
   const audioContextRef = useRef<AudioContext>();
   const analyserRef = useRef<AnalyserNode>();
   const dataArrayRef = useRef<Uint8Array>();
+  const visualizerRef = useRef<BasicVisualizer | null>(null);
 
   function play() {
     someAudio.play();
     setIsPlaying(true);
-    draw();
   }
 
   function pause() {
     someAudio.pause();
     setIsPlaying(false);
   }
-
-  const draw = useCallback(() => {
-    if (
-      !canvasRef.current ||
-      !analyserRef.current ||
-      !audioContextRef.current ||
-      !dataArrayRef.current
-    )
-      return;
-
-    // TODO requestAnimationFrame
-    requestAnimationFrame(draw);
-    analyserRef.current.getByteTimeDomainData(dataArrayRef.current);
-
-    const canvasCtx = canvasRef.current.getContext('2d');
-
-    if (!canvasCtx) {
-      console.warn('No canvas context');
-      return;
-    }
-
-    canvasCtx.fillStyle = 'rgb(200, 200, 200)';
-    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-    canvasCtx.lineWidth = 2;
-    canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
-    canvasCtx.beginPath();
-
-    const sliceWidth = WIDTH / BUFFER_LENGTH;
-    let x = 0;
-
-    for (let i = 0; i < BUFFER_LENGTH; i++) {
-      const v = dataArrayRef.current[i] / 128;
-      const y = (v * HEIGHT) / 2;
-
-      if (i === 0) {
-        canvasCtx.moveTo(x, y);
-      } else {
-        canvasCtx.lineTo(x, y);
-      }
-
-      x += sliceWidth;
-    }
-
-    canvasCtx.lineTo(WIDTH, canvasRef.current.height / 2);
-    canvasCtx.stroke();
-  }, []);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -91,9 +45,24 @@ function App() {
       const bufferLength = audioAnalyser.frequencyBinCount;
       dataArrayRef.current = new Uint8Array(bufferLength);
       audioAnalyser.getByteTimeDomainData(dataArrayRef.current);
-      draw();
+      if (!canvasRef.current) {
+        console.warn('where canvas');
+        return;
+      }
+      visualizerRef.current = new BasicVisualizer(
+        dataArrayRef.current,
+        analyserRef.current,
+        canvasRef.current,
+      );
+      visualizerRef.current.start();
     }
-  }, [draw]);
+
+    return () => {
+      if (visualizerRef.current) {
+        visualizerRef.current.stop();
+      }
+    };
+  }, []);
 
   return (
     <div className="App">
