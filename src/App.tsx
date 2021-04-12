@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
+import { AudioPlayer } from './audioPlayer/AudioPlayer';
 import sample1 from './samples/sample1.ogg';
 import { AudioAnalyserFactory } from './utils/AudioContext';
 import { BasicVisualizer } from './visualizers/BasicVisualizer';
@@ -14,22 +15,11 @@ const HEIGHT = 500;
 const FFT_SIZE = 1024;
 
 function App() {
-  const [isPlaying, setIsPlaying] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioContextRef = useRef<AudioContext>();
   const analyserRef = useRef<AnalyserNode>();
   const dataArrayRef = useRef<Uint8Array>();
   const visualizerRef = useRef<BasicVisualizer | null>(null);
-
-  function play() {
-    someAudio.play();
-    setIsPlaying(true);
-  }
-
-  function pause() {
-    someAudio.pause();
-    setIsPlaying(false);
-  }
 
   useEffect(() => {
     const { audioContext, audioAnalyser } = AudioAnalyserFactory.create();
@@ -61,8 +51,8 @@ function App() {
 
   return (
     <div className="App">
-      {isPlaying ? <button onClick={pause}>pause</button> : <button onClick={play}>play</button>}
       <canvas ref={canvasRef} width={WIDTH} height={HEIGHT} />
+      <AudioPlayer audio={someAudio} />
     </div>
   );
 }
