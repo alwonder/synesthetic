@@ -15,7 +15,6 @@ const FFT_SIZE = 1024;
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioContextRef = useRef<AudioContext>();
   const analyserRef = useRef<AnalyserNode>();
@@ -33,27 +32,25 @@ function App() {
   }
 
   useEffect(() => {
-    if (audioRef.current) {
-      const { audioContext, audioAnalyser } = AudioAnalyserFactory.create();
-      audioContextRef.current = audioContext;
-      analyserRef.current = audioAnalyser;
-      const source = audioContext.createMediaElementSource(someAudio);
-      source.connect(audioAnalyser);
-      audioAnalyser.connect(audioContext.destination);
-      audioAnalyser.fftSize = FFT_SIZE;
-      const bufferLength = audioAnalyser.frequencyBinCount;
-      dataArrayRef.current = new Uint8Array(bufferLength);
-      if (!canvasRef.current) {
-        console.warn('where canvas');
-        return;
-      }
-      visualizerRef.current = new BasicVisualizer(
-        dataArrayRef.current,
-        analyserRef.current,
-        canvasRef.current,
-      );
-      visualizerRef.current.start();
+    const { audioContext, audioAnalyser } = AudioAnalyserFactory.create();
+    audioContextRef.current = audioContext;
+    analyserRef.current = audioAnalyser;
+    const source = audioContext.createMediaElementSource(someAudio);
+    source.connect(audioAnalyser);
+    audioAnalyser.connect(audioContext.destination);
+    audioAnalyser.fftSize = FFT_SIZE;
+    const bufferLength = audioAnalyser.frequencyBinCount;
+    dataArrayRef.current = new Uint8Array(bufferLength);
+    if (!canvasRef.current) {
+      console.warn('where canvas');
+      return;
     }
+    visualizerRef.current = new BasicVisualizer(
+      dataArrayRef.current,
+      analyserRef.current,
+      canvasRef.current,
+    );
+    visualizerRef.current.start();
 
     return () => {
       if (visualizerRef.current) {
@@ -64,7 +61,6 @@ function App() {
 
   return (
     <div className="App">
-      <audio ref={audioRef} />
       {isPlaying ? <button onClick={pause}>pause</button> : <button onClick={play}>play</button>}
       <canvas ref={canvasRef} width={WIDTH} height={HEIGHT} />
     </div>
