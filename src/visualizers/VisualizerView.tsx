@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { AudioProcessor } from '../audioProcessor/AudioProcessor';
+import { BarVisualizerContainer } from './barVisualizer/BarVisualizerContainer';
 import { BasicVisualizerContainer } from './basicVisualizer/BasicVisualizerContainer';
 import { BasicVisualizer2Container } from './basicVisualizer2/BasicVisualizer2Container';
 import { VisualizerKey, visualizersList } from './visualizersList';
@@ -17,6 +18,7 @@ export const VisualizerView = ({ processor }: Props) => {
     const viz: Record<VisualizerKey, () => JSX.Element> = {
       basic: () => <BasicVisualizerContainer processor={processor} />,
       basic2: () => <BasicVisualizer2Container processor={processor} />,
+      bar: () => <BarVisualizerContainer processor={processor} />,
     };
 
     if (!viz[currentVisualizer]) {

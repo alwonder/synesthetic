@@ -1,7 +1,7 @@
 import { AudioProcessor } from '../../audioProcessor/AudioProcessor';
 import { AudioVisualizer } from '../AudioVisualizer';
 
-export class BasicVisualizer implements AudioVisualizer {
+export class BarVisualizer implements AudioVisualizer {
   private canvasContext = this.canvas.getContext('2d');
   private canvasWidth = this.canvas.width;
   private canvasHeight = this.canvas.height;
@@ -12,7 +12,7 @@ export class BasicVisualizer implements AudioVisualizer {
   private requestID: number | null = null;
 
   constructor(private processor: AudioProcessor, private canvas: HTMLCanvasElement) {
-    this.processor.setFftSize(1024);
+    this.processor.setFftSize(64);
     this.dataArray = this.processor.getDataArray();
   }
 
@@ -38,40 +38,22 @@ export class BasicVisualizer implements AudioVisualizer {
       this.requestID = requestAnimationFrame(this.requestFrameCallback);
     }
 
-    this.analyser.getByteTimeDomainData(this.dataArray);
+    this.analyser.getByteFrequencyData(this.dataArray);
 
     this.canvasContext.fillStyle = 'rgb(0, 0, 0)';
     this.canvasContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-    this.drawWave(3, 'rgb(0, 255, 0)');
-    this.drawWave(2, 'rgb(255, 255, 255)');
-    this.canvasContext.filter = 'blur(2px)';
-  }
-
-  private drawWave(lineWidth: number, strokeStyle: string): void {
-    if (!this.canvasContext) return;
-
-    this.canvasContext.lineWidth = lineWidth;
-    this.canvasContext.strokeStyle = strokeStyle;
-    this.canvasContext.beginPath();
-
-    const sliceWidth = this.canvasWidth / this.dataArray.byteLength;
+    const barWidth = this.canvasWidth / this.dataArray.byteLength;
+    let barHeight: number;
     let x = 0;
 
     for (let i = 0; i < this.dataArray.byteLength; i++) {
-      const v = this.dataArray[i] / 128;
-      const y = (v * this.canvasHeight) / 2;
+      barHeight = (this.dataArray[i] * this.canvasHeight) / 256;
 
-      if (i === 0) {
-        this.canvasContext.moveTo(x, y);
-      } else {
-        this.canvasContext.lineTo(x, y);
-      }
+      this.canvasContext.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
+      this.canvasContext.fillRect(x, this.canvasHeight - barHeight / 2, barWidth, barHeight);
 
-      x += sliceWidth;
+      x += barWidth + 1;
     }
-
-    this.canvasContext.lineTo(this.canvasWidth, this.canvasHeight / 2);
-    this.canvasContext.stroke();
   }
 }

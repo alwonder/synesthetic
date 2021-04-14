@@ -6,12 +6,15 @@ export class BasicVisualizer2 implements AudioVisualizer {
   private canvasWidth = this.canvas.width;
   private canvasHeight = this.canvas.height;
   private analyser = this.processor.getAnalyserNode();
-  private dataArray = this.processor.getDataArray();
+  private dataArray: Uint8Array;
   private requestFrameCallback = () => this.draw();
   private isStarted = false;
   private requestID: number | null = null;
 
-  constructor(private processor: AudioProcessor, private canvas: HTMLCanvasElement) {}
+  constructor(private processor: AudioProcessor, private canvas: HTMLCanvasElement) {
+    this.processor.setFftSize(32);
+    this.dataArray = this.processor.getDataArray();
+  }
 
   public start(): void {
     requestAnimationFrame(this.requestFrameCallback);

@@ -4,9 +4,9 @@ export class AudioProcessor {
   private readonly audioContext: AudioContext;
   private readonly analyserNode: AnalyserNode;
   private readonly sourceNode: MediaElementAudioSourceNode;
-  private readonly dataArray: Uint8Array;
+  private dataArray: Uint8Array;
 
-  private readonly FFT_SIZE = 1024;
+  private fftSize = 1024;
 
   constructor(private readonly audio: HTMLAudioElement) {
     this.audioContext = AudioContextProvider.getInstance();
@@ -14,7 +14,7 @@ export class AudioProcessor {
     this.sourceNode = this.audioContext.createMediaElementSource(audio);
     this.sourceNode.connect(this.analyserNode);
     this.analyserNode.connect(this.audioContext.destination);
-    this.analyserNode.fftSize = this.FFT_SIZE;
+    this.analyserNode.fftSize = this.fftSize;
 
     const bufferLength = this.analyserNode.frequencyBinCount;
     this.dataArray = new Uint8Array(bufferLength);
@@ -26,5 +26,12 @@ export class AudioProcessor {
 
   public getAnalyserNode(): AnalyserNode {
     return this.analyserNode;
+  }
+
+  public setFftSize(size: number): void {
+    this.fftSize = size;
+    this.analyserNode.fftSize = this.fftSize;
+    const bufferLength = this.analyserNode.frequencyBinCount;
+    this.dataArray = new Uint8Array(bufferLength);
   }
 }
