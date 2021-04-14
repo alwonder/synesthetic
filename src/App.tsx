@@ -4,39 +4,32 @@ import { AudioPlayer } from './audioPlayer/AudioPlayer';
 import { AudioProcessor } from './audioProcessor/AudioProcessor';
 import { AudioSelect } from './audioSelect/AudioSelect';
 import { audioSources } from './export/audioSources';
-import { BasicVisualizer } from './visualizers/BasicVisualizer';
+import { VisualizerView } from './visualizers/VisualizerView';
 
-const someAudio = new Audio();
-someAudio.crossOrigin = 'anonymous';
+function createAudio() {
+  const someAudio = new Audio();
+  someAudio.crossOrigin = 'anonymous';
+  return someAudio;
+}
 
 function App() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const visualizerRef = useRef<BasicVisualizer | null>(null);
+  const audio = useRef<HTMLAudioElement>(createAudio());
   const [audioSrc, setAudioSrc] = useState(audioSources[0].src);
+  const [processor, setProcessor] = useState<AudioProcessor | null>(null);
 
   useEffect(() => {
-    someAudio.pause();
-    someAudio.src = audioSrc;
+    const currentAudio = audio.current;
+
+    currentAudio.pause();
+    currentAudio.src = audioSrc;
 
     return () => {
-      someAudio.src = '';
+      currentAudio.src = '';
     };
   }, [audioSrc]);
 
   useEffect(() => {
-    if (!canvasRef.current) {
-      console.warn('where canvas');
-      return;
-    }
-    const audioProcessor = new AudioProcessor(someAudio);
-    visualizerRef.current = new BasicVisualizer(audioProcessor, canvasRef.current);
-    visualizerRef.current.start();
-
-    return () => {
-      if (visualizerRef.current) {
-        visualizerRef.current.stop();
-      }
-    };
+    setProcessor(new AudioProcessor(audio.current));
   }, []);
 
   const onSrcSelect = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
@@ -45,8 +38,8 @@ function App() {
 
   return (
     <div className="App">
-      <canvas ref={canvasRef} width={512} height={512} />
-      <AudioPlayer audio={someAudio} />
+      <VisualizerView processor={processor} />
+      <AudioPlayer audio={audio.current} />
       <AudioSelect selectedSrc={audioSrc} onSrcSelect={onSrcSelect} />
     </div>
   );

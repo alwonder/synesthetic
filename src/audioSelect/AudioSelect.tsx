@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useEffect, useMemo } from 'react';
+import React, { ChangeEvent, useMemo } from 'react';
 import { audioSources } from '../export/audioSources';
 
 type Props = {

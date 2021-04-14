@@ -38,7 +38,7 @@ export const AudioPlayer = ({ audio }: Props) => {
     return () => {
       Object.keys(listeners).forEach((event) => audio.removeEventListener(event, listeners[event]));
     };
-  }, [audio, onCanPlay, onTimeUpdate, onPlaying, onPause, onEnded]);
+  }, [audio, onCanPlay, onTimeUpdate, onPlaying, onPause, onEnded, onEmptied]);
 
   const onPlayPauseClick = useCallback(() => {
     if (isPlaying) {

@@ -1,6 +1,7 @@
-import { AudioProcessor } from '../audioProcessor/AudioProcessor';
+import { AudioProcessor } from '../../audioProcessor/AudioProcessor';
+import { AudioVisualizer } from '../AudioVisualizer';
 
-export class BasicVisualizer {
+export class BasicVisualizer implements AudioVisualizer {
   private canvasContext = this.canvas.getContext('2d');
   private canvasWidth = this.canvas.width;
   private canvasHeight = this.canvas.height;
