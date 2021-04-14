@@ -1,17 +1,16 @@
+import { AudioProcessor } from '../audioProcessor/AudioProcessor';
+
 export class BasicVisualizer {
   private canvasContext = this.canvas.getContext('2d');
   private canvasWidth = this.canvas.width;
   private canvasHeight = this.canvas.height;
-  private bufferSize = this.dataArray.byteLength;
+  private analyser = this.processor.getAnalyserNode();
+  private dataArray = this.processor.getDataArray();
   private requestFrameCallback = () => this.draw();
   private isStarted = false;
   private requestID: number | null = null;
 
-  constructor(
-    private dataArray: Uint8Array,
-    private analyser: AnalyserNode,
-    private canvas: HTMLCanvasElement,
-  ) {}
+  constructor(private processor: AudioProcessor, private canvas: HTMLCanvasElement) {}
 
   public start(): void {
     requestAnimationFrame(this.requestFrameCallback);
@@ -52,10 +51,10 @@ export class BasicVisualizer {
     this.canvasContext.strokeStyle = strokeStyle;
     this.canvasContext.beginPath();
 
-    const sliceWidth = this.canvasWidth / this.bufferSize;
+    const sliceWidth = this.canvasWidth / this.dataArray.byteLength;
     let x = 0;
 
-    for (let i = 0; i < this.bufferSize; i++) {
+    for (let i = 0; i < this.dataArray.byteLength; i++) {
       const v = this.dataArray[i] / 128;
       const y = (v * this.canvasHeight) / 2;
 
