@@ -28,18 +28,23 @@ function App() {
     };
   }, [audioSrc]);
 
-  useEffect(() => {
-    setProcessor(new AudioProcessor(audio.current));
-  }, []);
-
   const onSrcSelect = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
     setAudioSrc(event.target.value);
   }, []);
 
+  // Some browsers require audioContext initialization through the direct
+  // user action (e.g. button click), Therefore we need to create
+  // the audio processor only when the play button was pressed.
+  const onPlayClick = useCallback(() => {
+    if (!processor) {
+      setProcessor(new AudioProcessor(audio.current));
+    }
+  }, [processor]);
+
   return (
     <div className="App">
       <VisualizerView processor={processor} />
-      <AudioPlayer audio={audio.current} />
+      <AudioPlayer audio={audio.current} onPlayClick={onPlayClick} />
       <AudioSelect selectedSrc={audioSrc} onSrcSelect={onSrcSelect} />
     </div>
   );

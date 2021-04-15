@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 type Props = {
   audio: HTMLAudioElement;
+  onPlayClick: () => void;
 };
 
-export const AudioPlayer = ({ audio }: Props) => {
+export const AudioPlayer = ({ audio, onPlayClick }: Props) => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -45,8 +46,9 @@ export const AudioPlayer = ({ audio }: Props) => {
       audio.pause();
     } else {
       audio.play();
+      onPlayClick();
     }
-  }, [isPlaying, audio]);
+  }, [isPlaying, audio, onPlayClick]);
 
   return (
     <div>
