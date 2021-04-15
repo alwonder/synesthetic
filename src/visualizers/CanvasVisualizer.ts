@@ -11,12 +11,12 @@ export abstract class CanvasVisualizer implements AudioVisualizer {
   protected isStarted = false;
   protected requestID: number | null = null;
 
-  constructor(
+  protected constructor(
     protected fftSize: number,
     protected processor: AudioProcessor,
     protected canvas: HTMLCanvasElement,
   ) {
-    this.processor.setFftSize(fftSize);
+    this.analyser.fftSize = fftSize;
     this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
   }
 
