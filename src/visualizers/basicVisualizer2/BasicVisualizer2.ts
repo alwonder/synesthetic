@@ -13,7 +13,7 @@ export class BasicVisualizer2 implements AudioVisualizer {
 
   constructor(private processor: AudioProcessor, private canvas: HTMLCanvasElement) {
     this.processor.setFftSize(32);
-    this.dataArray = this.processor.getDataArray();
+    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
   }
 
   public start(): void {

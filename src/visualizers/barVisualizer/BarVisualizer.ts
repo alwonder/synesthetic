@@ -6,14 +6,14 @@ export class BarVisualizer implements AudioVisualizer {
   private canvasWidth = this.canvas.width;
   private canvasHeight = this.canvas.height;
   private analyser = this.processor.getAnalyserNode();
-  private dataArray: Uint8Array;
+  private readonly dataArray: Uint8Array;
   private requestFrameCallback = () => this.draw();
   private isStarted = false;
   private requestID: number | null = null;
 
   constructor(private processor: AudioProcessor, private canvas: HTMLCanvasElement) {
     this.processor.setFftSize(64);
-    this.dataArray = this.processor.getDataArray();
+    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
   }
 
   public start(): void {
