@@ -1,35 +1,12 @@
 import { AudioProcessor } from '../../audioProcessor/AudioProcessor';
-import { AudioVisualizer } from '../AudioVisualizer';
+import { CanvasVisualizer } from '../CanvasVisualizer';
 
-export class BasicVisualizer implements AudioVisualizer {
-  private canvasContext = this.canvas.getContext('2d');
-  private canvasWidth = this.canvas.width;
-  private canvasHeight = this.canvas.height;
-  private analyser = this.processor.getAnalyserNode();
-  private dataArray: Uint8Array;
-  private requestFrameCallback = () => this.draw();
-  private isStarted = false;
-  private requestID: number | null = null;
-
-  constructor(private processor: AudioProcessor, private canvas: HTMLCanvasElement) {
-    this.processor.setFftSize(1024);
-    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+export class BasicVisualizer extends CanvasVisualizer {
+  constructor(protected processor: AudioProcessor, protected canvas: HTMLCanvasElement) {
+    super(1024, processor, canvas);
   }
 
-  public start(): void {
-    requestAnimationFrame(this.requestFrameCallback);
-    this.isStarted = true;
-  }
-
-  public stop(): void {
-    if (this.requestID) {
-      cancelAnimationFrame(this.requestID);
-      this.requestID = null;
-    }
-    this.isStarted = false;
-  }
-
-  private draw(): void {
+  protected draw(): void {
     if (!this.canvasContext) {
       console.warn('No canvas context found');
       return;
