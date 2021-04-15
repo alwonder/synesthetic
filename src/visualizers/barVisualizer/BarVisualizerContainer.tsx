@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef } from 'react';
-import { AudioProcessor } from '../../audioProcessor/AudioProcessor';
+import { AudioProcessor } from '../../audioProcessing/AudioProcessor';
 import { BarVisualizer } from './BarVisualizer';
 
 type Props = {

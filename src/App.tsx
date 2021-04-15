@@ -1,10 +1,10 @@
 import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
-import { AudioPlayer } from './audioPlayer/AudioPlayer';
-import { AudioProcessor } from './audioProcessor/AudioProcessor';
-import { AudioSelect } from './audioSelect/AudioSelect';
+import { AudioPlayer } from './components/audioPlayer/AudioPlayer';
+import { AudioProcessor } from './audioProcessing/AudioProcessor';
+import { AudioSelect } from './components/audioSelect/AudioSelect';
 import { audioSources } from './export/audioSources';
-import { VisualizerView } from './visualizers/VisualizerView';
+import { VisualizerView } from './components/VisualizerView';
 
 function createAudio() {
   const someAudio = new Audio();

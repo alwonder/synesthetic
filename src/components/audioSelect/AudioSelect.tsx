@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useMemo } from 'react';
-import { audioSources } from '../export/audioSources';
+import { audioSources } from '../../export/audioSources';
 
 type Props = {
   selectedSrc: string;

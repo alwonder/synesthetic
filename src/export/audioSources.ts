@@ -1,6 +1,6 @@
-import sample1 from '../samples/sample1.ogg';
-import sample2 from '../samples/sample2.mp3';
-import sample3 from '../samples/20hz-10khz.ogg';
+import sample1 from '../assets/samples/sample1.ogg';
+import sample2 from '../assets/samples/sample2.mp3';
+import sample3 from '../assets/samples/20hz-10khz.ogg';
 
 export type AudioSourceItem = {
   name: string;

@@ -1,4 +1,4 @@
-import { AudioProcessor } from '../audioProcessor/AudioProcessor';
+import { AudioProcessor } from '../audioProcessing/AudioProcessor';
 import { AudioVisualizer } from './AudioVisualizer';
 
 export abstract class CanvasVisualizer implements AudioVisualizer {

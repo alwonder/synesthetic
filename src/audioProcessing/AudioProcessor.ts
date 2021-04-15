@@ -1,4 +1,4 @@
-import { AudioContextProvider } from '../utils/AudioContextProvider';
+import { AudioContextProvider } from './AudioContextProvider';
 
 export class AudioProcessor {
   private readonly audioContext: AudioContext;

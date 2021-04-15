@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
-import { AudioProcessor } from '../audioProcessor/AudioProcessor';
-import { BarVisualizerContainer } from './barVisualizer/BarVisualizerContainer';
-import { BasicVisualizerContainer } from './basicVisualizer/BasicVisualizerContainer';
-import { BasicVisualizer2Container } from './basicVisualizer2/BasicVisualizer2Container';
-import { VisualizerKey, visualizersList } from './visualizersList';
+import { AudioProcessor } from '../audioProcessing/AudioProcessor';
+import { BarVisualizerContainer } from '../visualizers/barVisualizer/BarVisualizerContainer';
+import { BasicVisualizerContainer } from '../visualizers/basicVisualizer/BasicVisualizerContainer';
+import { BasicVisualizer2Container } from '../visualizers/basicVisualizer2/BasicVisualizer2Container';
+import { VisualizerKey, visualizersList } from '../visualizers/visualizersList';
 
 type Props = {
   processor: AudioProcessor | null;
